@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: light; }
+html, body { height: 100%; }
+body { background: #fafafa; color: #0f172a; }
+
+/* Minimal prose styling (no plugin) */
+.prose h2{font-size:1.25rem;font-weight:600;margin-top:1.75rem}
+.prose p{margin-top:0.75rem;color:#334155;line-height:1.7}
+.prose ul{margin-top:0.75rem;padding-left:1.25rem;list-style:disc;color:#334155}
+.prose li{margin-top:0.25rem}
+
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
