@@ -1,4 +1,5 @@
 import "./globals.css";
+import { Suspense } from "react";
 import { CompareProvider } from "@/components/compare/useCompare";
 
 export const metadata = {
@@ -10,7 +11,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <CompareProvider>{children}</CompareProvider>
+        <CompareProvider>
+          <Suspense fallback={null}>{children}</Suspense>
+        </CompareProvider>
       </body>
     </html>
   );
