@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { products } from "@/lib/data/products";
+import { products } from "@/lib/data/directory";
 import { filtersFromSearchParams, filtersToSearchParams } from "@/lib/url";
 
 export function SearchBar() {
@@ -14,18 +14,23 @@ export function SearchBar() {
   const suggestions = useMemo(() => {
     const q = value.trim().toLowerCase();
     if (!q) return [];
+
     const pool = new Set<string>();
+
     for (const p of products) {
       if (p.name.toLowerCase().includes(q)) pool.add(p.name);
       if (p.providerName.toLowerCase().includes(q)) pool.add(p.providerName);
-      for (const feat of p.features) if (feat.toLowerCase().includes(q)) pool.add(feat);
+      if (p.fundingType.toLowerCase().includes(q)) pool.add(p.fundingType);
+      if (p.productFamilyName.toLowerCase().includes(q)) pool.add(p.productFamilyName);
     }
-    return Array.from(pool).slice(0, 6);
+
+    return Array.from(pool).slice(0, 7);
   }, [value]);
 
   function submit(nextQ: string) {
     const next = { ...f, q: nextQ, page: 1 };
-    router.push(`/products?${filtersToSearchParams(next).toString()}`);
+    const provider = sp.get("provider");
+    router.push(`/products?${filtersToSearchParams(next, provider).toString()}`);
   }
 
   return (
@@ -40,7 +45,7 @@ export function SearchBar() {
         <input
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          placeholder="Search 80+ funding products..."
+          placeholder={`Search ${products.length}+ funding products...`}
           className="w-full rounded-2xl border bg-white px-4 py-3 text-sm shadow-sm"
           aria-label="Search funding products"
         />

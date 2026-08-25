@@ -1,11 +1,13 @@
 "use client";
 
+import type { SortOption } from "@/lib/types";
+
 export function SortSelect({
   value,
   onChange
 }: {
-  value: "relevance" | "speed" | "amount" | "rating";
-  onChange: (v: "relevance" | "speed" | "amount" | "rating") => void;
+  value: SortOption;
+  onChange: (v: SortOption) => void;
 }) {
   return (
     <label className="flex items-center gap-2 text-sm">
@@ -13,13 +15,13 @@ export function SortSelect({
       <select
         className="rounded-xl border bg-white px-3 py-2 text-sm"
         value={value}
-        onChange={(e) => onChange(e.target.value as any)}
+        onChange={(e) => onChange(e.target.value as SortOption)}
         aria-label="Sort products"
       >
         <option value="relevance">Relevance</option>
-        <option value="speed">Speed</option>
-        <option value="amount">Amount</option>
-        <option value="rating">Rating</option>
+        <option value="speed">Fastest</option>
+        <option value="amount">Highest amount</option>
+        <option value="credit">Lowest credit minimum</option>
       </select>
     </label>
   );

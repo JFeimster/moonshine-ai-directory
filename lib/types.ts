@@ -1,73 +1,86 @@
-export type ProductType = "Line of Credit" | "Term Loan" | "MCA" | "Invoice Financing" | "SBA" | "Equipment";
-
-export type TimeToFund = "Same Day" | "Next Day" | "2-3 Days" | "1+ Week";
-export type CreditTier = "Bad (≤579)" | "Fair (580-669)" | "Good (670-739)" | "Excellent (740+)";
-
-export type Industry =
-  | "SaaS"
-  | "Ecommerce"
-  | "Agency"
-  | "Construction"
-  | "Healthcare"
-  | "Retail"
-  | "Trucking"
-  | "Hospitality"
-  | "General";
-
-export type AmountRange = "0-25k" | "25k-100k" | "100k-500k" | "500k+";
-
 export type FundingProduct = {
   id: string;
+  slug: string;
+  providerId: string;
   providerName: string;
-  providerLogo: string;
-  rating: number;
-  reviewsCount: number;
+  providerInitials: string;
   name: string;
-  tagline: string;
-  productType: ProductType;
-  industries: Industry[];
+  description: string;
+
+  fundingType: string;
+  productFamilyId: string;
+  productFamilyName: string;
+  category: string;
+
   amountMin: number;
   amountMax: number;
-  timeToFund: TimeToFund;
-  minCreditScore: number;
-  features: string[];
-  eligibility: string[];
-  processSteps: { title: string; detail: string }[];
-  testimonials: { name: string; quote: string }[];
+  minCreditScore: number | null;
+  minMonthlyRevenue: number | null;
+  minMonthlyRevenueNote: string | null;
+  minTimeInBusinessMonths: number | null;
+  creditTier: string | null;
+
+  termLength: string | null;
+  paymentType: string | null;
+  rateCostRange: string | null;
+  timeToFunding: string | null;
+  startupEligible: boolean;
+
+  industries: string[];
+  qualificationProfile: string | null;
+  bestFor: string[];
+  requiredDocuments: string[];
+  disqualifiers: string[];
+
+  ctaLabel: string;
   applyUrl: string;
 };
 
-export type SubmissionStatus = "submitted" | "approved" | "rejected";
-
-export type ProductSubmission = {
+export type FundingPartner = {
   id: string;
-  submittedAt: string; // ISO
-  status: SubmissionStatus;
-  notes?: string;
-
-  // product fields (subset)
-  providerName: string;
-  providerLogo?: string;
+  slug: string;
   name: string;
-  tagline: string;
-  productType: ProductType;
-  industries: Industry[];
-  amountMin: number;
-  amountMax: number;
-  timeToFund: TimeToFund;
-  minCreditScore: number;
-  features: string[];
-  applyUrl: string;
+  initials: string;
+  specialization: string;
+  productFamilyIds: string[];
+  productFamilyNames: string[];
+  productTypes: string[];
+  industries: string[];
+  minCreditScore: number | null;
+  minMonthlyRevenue: number | null;
+  minTimeInBusinessMonths: number | null;
+  qualificationProfile: string | null;
+  fundingAmountText: string | null;
+  productCount: number;
+  directoryLink: string;
 };
 
-export type Filters
- = {
+export type FundingTool = {
+  name: string;
+  slug: string;
+  brand: string | null;
+  persona: string | null;
+  problem: string | null;
+  coreLogic: string | null;
+  outputArtifact: string | null;
+  assetType: string;
+  partnerChannel: string | null;
+  buildState: "live" | "concept" | string;
+  liveUrl: string | null;
+};
+
+export type SortOption = "relevance" | "speed" | "amount" | "credit";
+
+export type Filters = {
   q: string;
-  productTypes: ProductType[];
-  amountRanges: AmountRange[];
-  times: TimeToFund[];
-  creditTiers: CreditTier[];
-  industries: Industry[];
-  sort: "relevance" | "speed" | "amount" | "rating";
+  familyIds: string[];
+  fundingTypes: string[];
+  amountBands: string[];
+  speedBands: string[];
+  creditBands: string[];
+  revenueBands: string[];
+  timeBands: string[];
+  startupOnly: boolean;
+  sort: SortOption;
   page: number;
 };

@@ -2,39 +2,72 @@
 
 import { useMemo } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { filtersFromSearchParams, filtersToSearchParams, DEFAULT_FILTERS } from "@/lib/url";
+import { productFamilies } from "@/lib/data/directory";
+import { AMOUNT_BANDS, SPEED_BANDS, CREDIT_BANDS, REVENUE_BANDS, TIME_BANDS } from "@/lib/filters";
+import { filtersFromSearchParams, filtersToSearchParams } from "@/lib/url";
+
+const labelMap = new Map<string, string>([
+  ...productFamilies.map((x) => [`family:${x.id}`, x.name] as [string, string]),
+  ...AMOUNT_BANDS.map((x) => [`amt:${x.id}`, x.label] as [string, string]),
+  ...SPEED_BANDS.map((x) => [`speed:${x.id}`, x.label] as [string, string]),
+  ...CREDIT_BANDS.map((x) => [`credit:${x.id}`, x.label] as [string, string]),
+  ...REVENUE_BANDS.map((x) => [`revenue:${x.id}`, x.label] as [string, string]),
+  ...TIME_BANDS.map((x) => [`tib:${x.id}`, x.label] as [string, string])
+]);
 
 export function AppliedChips() {
   const sp = useSearchParams();
   const router = useRouter();
   const f = useMemo(() => filtersFromSearchParams(new URLSearchParams(sp.toString())), [sp]);
+  const provider = sp.get("provider");
 
   const chips = [
-    ...f.productTypes.map((v) => ({ k: "type", v })),
-    ...f.amountRanges.map((v) => ({ k: "amt", v })),
-    ...f.times.map((v) => ({ k: "time", v })),
-    ...f.creditTiers.map((v) => ({ k: "credit", v })),
-    ...f.industries.map((v) => ({ k: "industry", v }))
+    ...f.familyIds.map((v) => ({ k: "family", v })),
+    ...f.fundingTypes.map((v) => ({ k: "type", v })),
+    ...f.amountBands.map((v) => ({ k: "amt", v })),
+    ...f.speedBands.map((v) => ({ k: "speed", v })),
+    ...f.creditBands.map((v) => ({ k: "credit", v })),
+    ...f.revenueBands.map((v) => ({ k: "revenue", v })),
+    ...f.timeBands.map((v) => ({ k: "tib", v })),
+    ...(f.startupOnly ? [{ k: "startup", v: "Startup eligible" }] : [])
   ];
 
-  if (chips.length === 0 && !f.q) return null;
+  if (chips.length === 0 && !f.q && !provider) return null;
+
+  function push(next: typeof f) {
+    router.push(`/products?${filtersToSearchParams({ ...next, page: 1 }, provider).toString()}`);
+  }
 
   function remove(k: string, v: string) {
-    const next = { ...f, page: 1 };
-    if (k === "type") next.productTypes = next.productTypes.filter((x) => x !== (v as any));
-    if (k === "amt") next.amountRanges = next.amountRanges.filter((x) => x !== (v as any));
-    if (k === "time") next.times = next.times.filter((x) => x !== (v as any));
-    if (k === "credit") next.creditTiers = next.creditTiers.filter((x) => x !== (v as any));
-    if (k === "industry") next.industries = next.industries.filter((x) => x !== (v as any));
-    router.push(`/products?${filtersToSearchParams(next).toString()}`);
+    const next = { ...f };
+
+    if (k === "family") next.familyIds = next.familyIds.filter((x) => x !== v);
+    if (k === "type") next.fundingTypes = next.fundingTypes.filter((x) => x !== v);
+    if (k === "amt") next.amountBands = next.amountBands.filter((x) => x !== v);
+    if (k === "speed") next.speedBands = next.speedBands.filter((x) => x !== v);
+    if (k === "credit") next.creditBands = next.creditBands.filter((x) => x !== v);
+    if (k === "revenue") next.revenueBands = next.revenueBands.filter((x) => x !== v);
+    if (k === "tib") next.timeBands = next.timeBands.filter((x) => x !== v);
+    if (k === "startup") next.startupOnly = false;
+
+    push(next);
   }
 
   return (
     <div className="mt-2 flex flex-wrap items-center gap-2">
+      {provider && (
+        <span className="rounded-full border bg-white px-3 py-1 text-xs">
+          Provider filter
+          <button className="ml-2 text-slate-500 hover:text-slate-900" onClick={() => router.push("/products")} aria-label="Remove provider filter">
+            ×
+          </button>
+        </span>
+      )}
+
       {f.q && (
         <span className="rounded-full border bg-white px-3 py-1 text-xs">
           Search: {f.q}
-          <button className="ml-2 text-slate-500 hover:text-slate-900" onClick={() => router.push(`/products?${filtersToSearchParams({ ...f, q: "", page: 1 }).toString()}`)} aria-label="Remove search">
+          <button className="ml-2 text-slate-500 hover:text-slate-900" onClick={() => push({ ...f, q: "" })} aria-label="Remove search">
             ×
           </button>
         </span>
@@ -42,19 +75,12 @@ export function AppliedChips() {
 
       {chips.map((c) => (
         <span key={`${c.k}:${c.v}`} className="rounded-full border bg-white px-3 py-1 text-xs">
-          {c.v}
+          {labelMap.get(`${c.k}:${c.v}`) ?? c.v}
           <button className="ml-2 text-slate-500 hover:text-slate-900" onClick={() => remove(c.k, c.v)} aria-label={`Remove ${c.v}`}>
             ×
           </button>
         </span>
       ))}
-
-      <button
-        className="rounded-full bg-slate-900 px-3 py-1 text-xs font-medium text-white hover:opacity-90"
-        onClick={() => router.push("/products")}
-      >
-        Clear all
-      </button>
     </div>
   );
 }

@@ -14,18 +14,26 @@ export function Header() {
           <span>Moonshine Capital</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-2 ml-2" aria-label="Primary">
-          <a className="rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-white" href="/partners">Partners</a>
-          <a className="rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-white" href="/resources">Resources</a>
-          <a className="rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-white" href="/portal">Portal</a>
+        <nav className="ml-2 hidden items-center gap-1 md:flex" aria-label="Primary">
+          <Link className="rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-white" href="/products">
+            Products
+          </Link>
+          <Link className="rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-white" href="/partners">
+            Partners
+          </Link>
+          <Link className="rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-white" href="/tools">
+            Tools
+          </Link>
+          <Link className="rounded-xl px-3 py-2 text-sm text-slate-700 hover:bg-white" href="/resources">
+            Resources
+          </Link>
         </nav>
-
 
         <div className="flex flex-1 items-center justify-center gap-3">
           <div className="w-full max-w-2xl">
             <SearchBar />
           </div>
-          <div className="hidden lg:block">
+          <div className="hidden xl:block">
             <QuickFilters />
           </div>
         </div>
@@ -33,7 +41,7 @@ export function Header() {
         <UserMenu />
       </div>
 
-      <div className="border-t bg-bg lg:hidden">
+      <div className="border-t bg-bg xl:hidden">
         <div className="mx-auto max-w-7xl px-4 py-2">
           <QuickFilters />
         </div>

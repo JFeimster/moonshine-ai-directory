@@ -5,8 +5,10 @@ export function PartnerSpotlight() {
     <section className="rounded-2xl bg-card p-6 shadow-soft">
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl font-semibold">Partner Spotlight</h2>
-          <p className="mt-1 text-sm text-slate-600">Featured funding partners with proven conversion.</p>
+          <h2 className="text-xl font-semibold">Funding Partner Directory</h2>
+          <p className="mt-1 text-sm text-slate-600">
+            Browse active partners by funding focus and typical qualification profile.
+          </p>
         </div>
         <a className="rounded-xl border bg-white px-4 py-2 text-sm hover:border-secondary" href="/partners">
           View All Partners
