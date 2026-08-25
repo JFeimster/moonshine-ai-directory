@@ -69,6 +69,28 @@ export type FundingTool = {
   liveUrl: string | null;
 };
 
+export type SubmissionStatus = "submitted" | "approved" | "rejected";
+
+// Legacy provider-submission API contract retained for existing /api/submissions routes.
+export type ProductSubmission = {
+  id: string;
+  submittedAt: string;
+  status: SubmissionStatus;
+  notes?: string;
+  providerName: string;
+  providerLogo?: string;
+  name: string;
+  tagline: string;
+  productType: string;
+  industries: string[];
+  amountMin: number;
+  amountMax: number;
+  timeToFund: string;
+  minCreditScore: number;
+  features: string[];
+  applyUrl: string;
+};
+
 export type SortOption = "relevance" | "speed" | "amount" | "credit";
 
 export type Filters = {
