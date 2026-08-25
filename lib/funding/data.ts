@@ -106,7 +106,6 @@ export const fundingProviders: FundingProvider[] = providers
       productCount
     };
   })
-  .filter((p) => p.productCount > 0)
   .sort((a, b) => b.productCount - a.productCount || a.name.localeCompare(b.name));
 
 export const fundingTools: FundingTool[] = tools
