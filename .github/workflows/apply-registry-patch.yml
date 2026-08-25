@@ -1,0 +1,46 @@
+name: Apply registry patch
+
+on:
+  push:
+    branches: [registry-patch-2026-08-25]
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: registry-patch-2026-08-25
+          fetch-depth: 0
+
+      - name: Reconstruct and verify payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .github/patch-payload/part1.b64 \
+              .github/patch-payload/part2.b64 \
+              .github/patch-payload/part3.b64 \
+              .github/patch-payload/part4.b64 > /tmp/moonshine-patch.b64
+          base64 -d /tmp/moonshine-patch.b64 > /tmp/moonshine-patch.tar.gz
+          echo "901faadf67b7e7334ecfd3d48f1679e44977a3ec60419950ecb05c01e38f7b6b  /tmp/moonshine-patch.tar.gz" | sha256sum -c -
+
+      - name: Apply exact patch files
+        shell: bash
+        run: |
+          set -euo pipefail
+          tar -xzf /tmp/moonshine-patch.tar.gz -C .
+          rm -rf .github/patch-payload
+          rm -f .github/workflows/apply-registry-patch.yml
+
+      - name: Commit clean patch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app components lib .github
+          git commit -m "Apply Moonshine registry patch"
+          git push origin HEAD:registry-patch-2026-08-25
