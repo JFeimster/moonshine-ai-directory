@@ -1,0 +1,1 @@
+export function Stat({label,value}:{label:string;value:React.ReactNode}){return <div className="border border-slate-300 bg-white p-4"><div className="text-xs font-bold uppercase tracking-wider text-slate-500">{label}</div><div className="mt-2 text-lg font-black">{value}</div></div>}
